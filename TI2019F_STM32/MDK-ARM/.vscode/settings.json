@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.m": "matlab",
+        "*.asm": "asm-collection",
+        "arm_math.h": "c",
+        "arm_common_tables.h": "c"
+    }
+}
