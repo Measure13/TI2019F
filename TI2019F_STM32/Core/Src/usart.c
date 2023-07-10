@@ -21,13 +21,14 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#define PAPER_NUMBER 0x64
+#define START_MEASURE 0x65
+#define MODE_MEASURE 0x66
+#define MODE_CALIBRA 0x67
 #define UART_RX_BUF_SIZE 2048 // 1024 * sizeof(uint16_t)
 
 uint8_t USART_RxBuffer = 0;
-bool recving = false;
-bool initialization_done = false;
-bool ready_to_receive = false;
-bool receive_done = false;
+bool volatile recving = false;
 extern uint32_t adc_freq;
 
 static uint8_t uart1_rx_bp[UART_RX_BUF_SIZE];
@@ -66,7 +67,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+  HAL_UART_Receive_IT(&huart1, (uint8_t *)&uart1_rx_buf, 1);
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -146,6 +147,27 @@ void UART_RX_Data_Parse(uint8_t* p, uint8_t cnt)
   receive_done = false;
 	switch (p[0])
   {
+  case PAPER_NUMBER:
+    if (mode)
+    {
+      paper_num = p[1];
+      TIM_Wait_For_Done();
+    }
+    break;
+  case START_MEASURE:
+    if (!mode)
+    {
+      TIM_Wait_For_Done();
+      recving = true;
+    }
+    break;
+  case MODE_MEASURE:
+    Fit_Cap_Curve();
+    mode = FLAG_MEASURE;
+    break;
+  case MODE_CALIBRA:
+    mode = FLAG_CALIBRA;
+    break;
   case 0x88:
     initialization_done = true;
     break;
@@ -173,7 +195,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 	else
 	{
-    recving = true;
 		uart1_rx_bp[uart1_rx_cnt++] = uart1_rx_buf;
 	
 		if((uart1_rx_cnt > 3)&&(uart1_rx_bp[uart1_rx_cnt-3] == 0xFF)&&(uart1_rx_bp[uart1_rx_cnt-2] == 0xFF)&&(uart1_rx_bp[uart1_rx_cnt-1] == 0xFF))

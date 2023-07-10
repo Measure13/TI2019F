@@ -41,8 +41,16 @@ extern TIM_HandleTypeDef htim2;
 void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+extern bool volatile short_circuit;
 extern bool volatile end_flag;
 extern bool volatile tri_flag;
+extern uint16_t volatile TIM_IC_cnt;
+extern uint32_t TIM_final;
+extern uint32_t TIM_Array[TIM_MEDIAN_WINDOW];
+extern uint8_t paper_num;
+
+uint32_t median_u(uint32_t* data, uint8_t len, bool flag);
+void TIM_Wait_For_Done(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

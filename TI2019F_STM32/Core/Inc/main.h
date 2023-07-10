@@ -44,19 +44,21 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern uint32_t cap_paper[255];
+extern bool volatile mode;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+#define TIM_MEDIAN_WINDOW 255
+#define TIM2_CLOCK 79000000 // 79M
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void Fit_Cap_Curve(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

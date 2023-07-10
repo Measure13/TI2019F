@@ -1,5 +1,6 @@
 --cpu=Cortex-M4.fp.sp
 "ti2019f_stm32\startup_stm32f407xx.o"
+"ti2019f_stm32\usart_hmi.o"
 "ti2019f_stm32\main.o"
 "ti2019f_stm32\gpio.o"
 "ti2019f_stm32\tim.o"

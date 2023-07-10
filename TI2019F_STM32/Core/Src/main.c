@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "USART_HMI.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +45,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint32_t cap_paper[255]; // less paper more cap more count
+bool volatile mode = true;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,7 +57,39 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void Fit_Cap_Curve(void)
+{
+  uint32_t k = (cap_paper[1] * 1 + cap_paper[2] * 2) / 2;
+  for (uint8_t i = 3; i < 0xff; ++i)
+  {
+    cap_paper[i] = k / i;
+  }
+  
+}
 
+uint8_t Get_Paper_Number(uint32_t tim)
+{
+  for (uint8_t i = 1; i < 0xff; ++i)
+  {
+    if (tim >= cap_paper[i])
+    {
+      return i;
+    }
+    else
+    {
+      if (i == 0xff)
+      {
+        return 0xff;
+      }
+      else if (tim > (cap_paper[i] + cap_paper[i + 1]) / 2)
+      {
+        return i;
+      }
+    }
+    
+  }
+  return 0;
+}
 /* USER CODE END 0 */
 
 /**
@@ -90,12 +123,14 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-                                                      
-	__HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
-  HAL_TIM_Base_Start_IT(&htim2);
-	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+//  __HAL_TIM_SET_COUNTER(&htim2, 0);
+//	__HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
+//	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+//  HAL_TIM_Base_Start_IT(&htim2);
  
-	printf("START\n");
+  UARTHMI_Forget_It();
+  HAL_Delay(150);
+  UARTHMI_Reset();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -105,11 +140,33 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(tri_flag == 0 && end_flag == 1)
+    // if (TIM_final != 0)
+    // {
+    //   printf("\nTIME:%lu %.10lfs\n", TIM_final, (double)(TIM_final + 1) / (84 * 1000 * 1000));
+    //   TIM_final = 0;
+    // }
+    if (mode)
+    {
+		//HAL_Delay(1);
+    }
+    else
+    {
+		if (recving)
 		{
-			printf("\nTIME:%fs\n", (float)(htim2.Instance->CCR2 + 1) / (64 * 1000 * 1000));
-			end_flag = 0;
+			while (htim2.Instance->DIER & TIM_IT_CC2);
+			recving = false;
+			if (short_circuit)
+			{
+			  UARTHMI_Visibility_Change(2, 1);
+			}
+			else
+			{
+			  UARTHMI_Visibility_Change(2, 0);
+			  UARTHMI_Send_Number(1, Get_Paper_Number(TIM_final));
+			}
 		}
+      
+    }
   }
   /* USER CODE END 3 */
 }
@@ -131,14 +188,13 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 64;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -152,7 +208,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {

@@ -29,13 +29,14 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "tim.h"
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
-
+#define FLAG_MEASURE false
+#define FLAG_CALIBRA true
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
@@ -44,9 +45,10 @@ void MX_USART1_UART_Init(void);
 void USART_Conv_Data(uint16_t* adc_data_p, uint16_t length);
 void USART_Send_Data_Direct(uint8_t* data_p, uint16_t data_len);
 void USART_Send_Data_Temp(uint8_t* data_p, uint16_t data_len);
-extern bool initialization_done;
-extern bool ready_to_receive;
-extern bool receive_done;
+extern bool volatile recving;
+extern bool volatile initialization_done;
+extern bool volatile ready_to_receive;
+extern bool volatile receive_done;
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
