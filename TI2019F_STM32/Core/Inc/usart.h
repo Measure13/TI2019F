@@ -41,7 +41,12 @@ extern UART_HandleTypeDef huart1;
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void USART_Conv_Data(uint16_t* adc_data_p, uint16_t length);
+void USART_Send_Data_Direct(uint8_t* data_p, uint16_t data_len);
+void USART_Send_Data_Temp(uint8_t* data_p, uint16_t data_len);
+extern bool initialization_done;
+extern bool ready_to_receive;
+extern bool receive_done;
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

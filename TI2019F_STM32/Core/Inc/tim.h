@@ -41,7 +41,8 @@ extern TIM_HandleTypeDef htim2;
 void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+extern bool volatile end_flag;
+extern bool volatile tri_flag;
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

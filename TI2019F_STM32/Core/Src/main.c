@@ -18,16 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
-#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "arm_math.h"
-#include "arm_const_structs.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,8 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-float32_t adc_values[1024];
-float32_t fft_res[1024];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,13 +66,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	float a = PI / 3;
-
-  // arm_rfft_fast_instance_f32 S;
-  // arm_rfft_fast_init_f32(&S, 1024);
-  // arm_rfft_fast_f32(&S, adc_values, fft_res, 0);
-  // arm_cmplx_mag_squared_f32(fft_res, fft_res, 1024);
-  // arm_max_f32(fft_res, 1024, max_val, max_ind);
+	
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -97,12 +87,15 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC1_Init();
-  MX_TIM2_Init();
   MX_USART1_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
+                                                      
+	__HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
+  HAL_TIM_Base_Start_IT(&htim2);
+	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+ 
+	printf("START\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,7 +105,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  a = arm_sin_f32(a);
+	  if(tri_flag == 0 && end_flag == 1)
+		{
+			printf("\nTIME:%fs\n", (float)(htim2.Instance->CCR2 + 1) / (64 * 1000 * 1000));
+			end_flag = 0;
+		}
   }
   /* USER CODE END 3 */
 }
@@ -195,6 +192,7 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  printf("Wrong parameters value: file %s on line %d\r\n", file, line);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

@@ -3,6 +3,12 @@
         "*.m": "matlab",
         "*.asm": "asm-collection",
         "arm_math.h": "c",
-        "arm_common_tables.h": "c"
+        "arm_common_tables.h": "c",
+        "main.h": "c",
+        "usart.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "stm32f4xx_hal_conf.h": "c",
+        "tim.h": "c",
+        "gpio.h": "c"
     }
 }
