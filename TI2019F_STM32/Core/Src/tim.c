@@ -292,17 +292,17 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 	if(tri_flag == 0)
 	{
 		__HAL_TIM_SET_COUNTER(&htim2, 0);
-		tri_flag = 1;
+		tri_flag = true;
 	}
 	else
 	{
 		TIM_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
-		tri_flag = 0;
-		end_flag = 1;
+		tri_flag = false;
 		if (TIM_IC_cnt == TIM_MEDIAN_WINDOW)
 		{
 		  TIM_final = median_u(TIM_Array, TIM_MEDIAN_WINDOW, true);
 		  TIM_IC_cnt = 0;
+      end_flag = true;
 		  if (mode == FLAG_CALIBRA)
 		  {
 			cap_paper[paper_num] = TIM_final;

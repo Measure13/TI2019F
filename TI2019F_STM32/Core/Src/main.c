@@ -147,7 +147,11 @@ int main(void)
     // }
     if (mode)
     {
-      
+      if (end_flag)
+      {
+        end_flag = false;
+        printf("n0.pco=64512\xff\xff\xff");
+      }
     }
     else
     {
