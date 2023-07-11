@@ -123,10 +123,6 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-//  __HAL_TIM_SET_COUNTER(&htim2, 0);
-//	__HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
-//	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
-//  HAL_TIM_Base_Start_IT(&htim2);
  
   UARTHMI_Forget_It();
   HAL_Delay(150);
@@ -142,30 +138,34 @@ int main(void)
     /* USER CODE BEGIN 3 */
     // if (TIM_final != 0)
     // {
-    //   printf("\nTIME:%lu %.10lfs\n", TIM_final, (double)(TIM_final + 1) / (84 * 1000 * 1000));
+    //   printf("\nTIME:%lu %.10lfs\n", TIM_final, (double)(TIM_final + 1) / (TIM2_CLOCK));
     //   TIM_final = 0;
+    //   __HAL_TIM_SET_COUNTER(&htim2, 0);
+    //   __HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
+    //   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+    //   HAL_TIM_Base_Start_IT(&htim2);
     // }
     if (mode)
     {
-		//HAL_Delay(1);
+      
     }
     else
     {
-		if (recving)
-		{
-			while (htim2.Instance->DIER & TIM_IT_CC2);
-			recving = false;
-			if (short_circuit)
-			{
-			  UARTHMI_Visibility_Change(2, 1);
-			}
-			else
-			{
-			  UARTHMI_Visibility_Change(2, 0);
-			  UARTHMI_Send_Number(1, Get_Paper_Number(TIM_final));
-			}
-		}
-      
+      if (recving)
+      {
+        while (htim2.Instance->DIER & TIM_IT_CC2);
+        recving = false;
+        if (short_circuit)
+        {
+          UARTHMI_Visibility_Change(2, 1);
+          short_circuit = false;
+        }
+        else
+        {
+          UARTHMI_Visibility_Change(2, 0);
+          UARTHMI_Send_Number(1, Get_Paper_Number(TIM_final));
+        }
+      }
     }
   }
   /* USER CODE END 3 */
@@ -188,11 +188,12 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 16;
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
   RCC_OscInitStruct.PLL.PLLQ = 4;

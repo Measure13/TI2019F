@@ -1,0 +1,10 @@
+data = [0x3219, 0x206A, 0x18f3, 0x1539, 0x1289, 0x10a4, 0x0f4c, 0x0e4c, 0x0d7d, 0x0cdb, 0x0c53, 0x0be6, 0x0b85, 0x0b36, 0x0aec]
+import numpy as np
+import matplotlib.pyplot as plt
+
+p = 3
+data = 1 / np.power(np.array(data), p)
+plt.plot(data)
+plt.scatter(29, 1 / pow(0x8ea, p))
+plt.scatter(30, 1 / pow(0x8d5, p))
+plt.show()
