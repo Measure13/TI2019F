@@ -832,11 +832,13 @@ ARM Macro Assembler    Page 13
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
 interwork --depend=ti2019f_stm32\startup_stm32f407xx.d -oti2019f_stm32\startup_
 stm32f407xx.o -I.\RTE\_TI2019F_STM32 -ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS
-\5.9.0\CMSIS\Core\Include -ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2
-.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__MICROLIB SETA 1"
- --predefine="__UVISION_VERSION SETA 537" --predefine="_RTE_ SETA 1" --predefin
-e="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f407xx.ls
-t startup_stm32f407xx.s
+\5.9.0\CMSIS\Core\Include -ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSI
+S\DSP\Include -ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Privat
+eInclude -ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMS
+IS\Device\ST\STM32F4xx\Include --predefine="__MICROLIB SETA 1" --predefine="__U
+VISION_VERSION SETA 537" --predefine="_RTE_ SETA 1" --predefine="STM32F407xx SE
+TA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f407xx.lst startup_stm32f4
+07xx.s
 
 
 

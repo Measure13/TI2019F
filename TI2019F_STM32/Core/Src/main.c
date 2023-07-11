@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "USART_HMI.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define POLY 5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,31 +46,56 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint32_t cap_paper[255]; // less paper more cap more count
+uint32_t cap_paper[MAX_PAPER_NUM + 1]; // less paper more cap more count
 bool volatile mode = true;
+static const float32_t inv_array[] = {149999.999999994f, -2024999.9999998903f, 7199999.999999538f, -9374999.999999303f, 4049999.9999996773f, -28499.999999998538f, 452249.99999997334f, -1727999.9999998873f, 2343749.9999998324f, -1039499.9999999213f, 1983.3333333332082f, -35099.999999997715f, 145599.99999999028f, -208333.33333331897f, 95849.99999999322f, -59.999999999995495f, 1147.4999999999177f, -5119.999999999648f, 7812.49999999948f, -3779.999999999754f, 0.6666666666666087f, -13.499999999998941f, 63.99999999999545f, -104.16666666665994f, 53.99999999999682f};
+static float32_t X_30[(MAX_PAPER_NUM + 1) * POLY];
+static float32_t Y_5[POLY];
+static float32_t coef_5[POLY];
+static float32_t Y_30[MAX_PAPER_NUM + 1];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void testing_transition(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void Fit_Cap_Curve(void)
 {
-  uint32_t k = (cap_paper[1] * 1 + cap_paper[2] * 2) / 2;
-  for (uint8_t i = 3; i < 0xff; ++i)
+	volatile arm_status ast;
+  arm_matrix_instance_f32 inv = {POLY, POLY, (float32_t*)inv_array};
+  arm_matrix_instance_f32 Y = {MAX_PAPER_NUM + 1, 1, (float32_t*)Y_30};
+  for (uint8_t i = 0; i < POLY; ++i)
   {
-    cap_paper[i] = k / i;
+    Y_5[i] = (float32_t)cap_paper[i * 5 + 10];
   }
-  
+  arm_matrix_instance_f32 y = {POLY, 1, (float32_t*)Y_5};
+  arm_matrix_instance_f32 coef = {POLY, 1, (float32_t*)coef_5};
+  ast = arm_mat_mult_f32(&inv, &y, &coef);
+  for (uint8_t i = 5; i < MAX_PAPER_NUM + 1; ++i)
+  {
+    for (uint8_t j = 0; j < POLY; ++j)
+    {
+      X_30[i * POLY + j] = 1.0f / powf(i, POLY - 1 - j);
+    }
+  }
+  arm_matrix_instance_f32 X = {MAX_PAPER_NUM + 1, POLY, (float32_t*)X_30};
+  ast = arm_mat_mult_f32(&X, &coef, &Y);
+  for (uint8_t i = 1; i < MAX_PAPER_NUM + 1; ++i)
+  {
+    if (cap_paper[i] == 0.0f)
+    {
+      cap_paper[i] = (uint32_t)Y_30[i];
+    }
+  }
 }
 
 uint8_t Get_Paper_Number(uint32_t tim)
 {
-  for (uint8_t i = 1; i < 0xff; ++i)
+  for (uint8_t i = 1; i <= MAX_PAPER_NUM; ++i)
   {
     if (tim >= cap_paper[i])
     {
@@ -77,11 +103,11 @@ uint8_t Get_Paper_Number(uint32_t tim)
     }
     else
     {
-      if (i == 0xff)
+      if (i == MAX_PAPER_NUM)
       {
-        return 0xff;
+        return MAX_PAPER_NUM;
       }
-      else if (tim > (cap_paper[i] + cap_paper[i + 1]) / 2)
+      else if (1.0f / (tim * tim) < (1.0f / (cap_paper[i] * cap_paper[i]) + 1.0f / (cap_paper[i + 1] * cap_paper[i + 1]) / 2))
       {
         return i;
       }
@@ -89,6 +115,19 @@ uint8_t Get_Paper_Number(uint32_t tim)
     
   }
   return 0;
+}
+
+void testing_transition(void)
+{
+	Fit_Cap_Curve();
+	mode = FLAG_MEASURE;
+	for (uint8_t i = 0; i < 12; ++i)
+	{
+		printf("vis b%d,0\xff\xff\xff", i);
+	}
+	printf("vis bt0,0\xff\xff\xff");
+	printf("vis n0,0\xff\xff\xff");
+	UARTHMI_Visibility_Change(1, 0);
 }
 /* USER CODE END 0 */
 
@@ -158,7 +197,6 @@ int main(void)
       if (recving)
       {
         while (htim2.Instance->DIER & TIM_IT_CC2);
-        recving = false;
         if (short_circuit)
         {
           UARTHMI_Visibility_Change(2, 1);
@@ -168,7 +206,11 @@ int main(void)
         {
           UARTHMI_Visibility_Change(2, 0);
           UARTHMI_Send_Number(1, Get_Paper_Number(TIM_final));
+			BEEP;
+			HAL_Delay(500);
+			NOBB;
         }
+		recving = false;
       }
     }
   }
