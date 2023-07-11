@@ -84,12 +84,9 @@ void Fit_Cap_Curve(void)
   }
   arm_matrix_instance_f32 X = {MAX_PAPER_NUM + 1, POLY, (float32_t*)X_30};
   ast = arm_mat_mult_f32(&X, &coef, &Y);
-  for (uint8_t i = 1; i < MAX_PAPER_NUM + 1; ++i)
+  for (uint8_t i = 10; i < MAX_PAPER_NUM + 1; ++i)
   {
-    if (cap_paper[i] == 0.0f)
-    {
-      cap_paper[i] = (uint32_t)Y_30[i];
-    }
+      cap_paper[i] = (uint32_t)(Y_30[i] + 0.5f);
   }
 }
 
@@ -107,18 +104,26 @@ uint8_t Get_Paper_Number(uint32_t tim)
       {
         return MAX_PAPER_NUM;
       }
-      else if (1.0f / (tim * tim) < (1.0f / (cap_paper[i] * cap_paper[i]) + 1.0f / (cap_paper[i + 1] * cap_paper[i + 1]) / 2))
+      else if (1.0f / (tim * tim) < (1.0f / (cap_paper[i] * cap_paper[i]) + 1.0f / (cap_paper[i + 1] * cap_paper[i + 1])) / 2)
       {
         return i;
       }
     }
     
   }
-  return 0;
 }
 
 void testing_transition(void)
 {
+	cap_paper[1] = 0x0000;
+	cap_paper[2] = 0x0000;
+	cap_paper[3] = 0x0000;
+	cap_paper[4] = 0x0000;
+	cap_paper[5] = 0x0000;
+	cap_paper[6] = 0x0000;
+	cap_paper[7] = 0x0000;
+	cap_paper[8] = 0x0000;
+	cap_paper[9] = 0x0000;
   cap_paper[10] = 0x23d1;
   cap_paper[15] = 0x1b90;
   cap_paper[20] = 0x16a5;
@@ -174,7 +179,7 @@ int main(void)
   UARTHMI_Forget_It();
   UARTHMI_Reset();
   HAL_Delay(150);
-  testing_transition();
+  // testing_transition();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -215,11 +220,11 @@ int main(void)
         {
           UARTHMI_Visibility_Change(2, 0);
           UARTHMI_Send_Number(1, Get_Paper_Number(TIM_final));
-			BEEP;
-			HAL_Delay(500);
-			NOBB;
+          BEEP;
+          HAL_Delay(500);
+          NOBB;
         }
-		recving = false;
+		    recving = false;
       }
     }
   }
