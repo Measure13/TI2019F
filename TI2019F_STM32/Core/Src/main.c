@@ -119,14 +119,22 @@ uint8_t Get_Paper_Number(uint32_t tim)
 
 void testing_transition(void)
 {
+  cap_paper[10] = 0x23d1;
+  cap_paper[15] = 0x1b90;
+  cap_paper[20] = 0x16a5;
+  cap_paper[25] = 0x1354;
+  cap_paper[30] = 0x1206;
 	Fit_Cap_Curve();
 	mode = FLAG_MEASURE;
 	for (uint8_t i = 0; i < 12; ++i)
 	{
 		printf("vis b%d,0\xff\xff\xff", i);
+		HAL_Delay(1);
 	}
 	printf("vis bt0,0\xff\xff\xff");
+	HAL_Delay(1);
 	printf("vis n0,0\xff\xff\xff");
+	HAL_Delay(1);
 	UARTHMI_Visibility_Change(1, 0);
 }
 /* USER CODE END 0 */
@@ -164,8 +172,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
  
   UARTHMI_Forget_It();
-  HAL_Delay(150);
   UARTHMI_Reset();
+  HAL_Delay(150);
+  testing_transition();
   /* USER CODE END 2 */
 
   /* Infinite loop */
