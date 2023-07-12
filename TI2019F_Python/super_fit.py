@@ -7,8 +7,8 @@ POLY = 5
 y = np.zeros(MAX_PAPER_NUM, np.float64)
 x_ori = np.zeros((POLY, POLY), np.float64)
 for i in range(POLY):
-    for j in range(4, -1, -1):
-        x_ori[i, 4 - j] = np.float_power(i * POLY + 10, -j)
+    for j in range(POLY - 1, -1, -1):
+        x_ori[i, POLY - 1 - j] = np.float_power(i * POLY + 10, -j)
 x_inv = LA.inv(x_ori)
 # Y_5 = np.array([110, 85, 70, 60, 56])
 # Y_5 = Y_5 * 84 * 2
@@ -19,11 +19,13 @@ for i in range(1, MAX_PAPER_NUM + 1):
     for j in range(POLY):
         X_30[i][j] = 1 / np.float_power(i, POLY - 1 - j)
 Y_30 = X_30 @ coef
+print("x_inv:")
+print(x_inv)
 print(coef)
 print(X_30)
 print(Y_30)
-plt.plot(np.arange(1, 31), Y_30[np.arange(1, 31)], label="compute")
-plt.scatter(np.arange(10, 31, 5), Y_5, 15, "r", "*", label="input")
+plt.plot(np.arange(1, MAX_PAPER_NUM + 1), Y_30[np.arange(1, MAX_PAPER_NUM + 1)], label="compute")
+plt.scatter(np.arange(10, MAX_PAPER_NUM + 1, POLY), Y_5, 15, "r", "*", label="input")
 plt.legend()
 plt.show()
 # 5     170     3797

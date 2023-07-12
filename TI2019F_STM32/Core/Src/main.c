@@ -48,7 +48,9 @@
 /* USER CODE BEGIN PV */
 uint32_t cap_paper[MAX_PAPER_NUM + 1]; // less paper more cap more count
 bool volatile mode = true;
-static const float32_t inv_array[] = {149999.999999994f, -2024999.9999998903f, 7199999.999999538f, -9374999.999999303f, 4049999.9999996773f, -28499.999999998538f, 452249.99999997334f, -1727999.9999998873f, 2343749.9999998324f, -1039499.9999999213f, 1983.3333333332082f, -35099.999999997715f, 145599.99999999028f, -208333.33333331897f, 95849.99999999322f, -59.999999999995495f, 1147.4999999999177f, -5119.999999999648f, 7812.49999999948f, -3779.999999999754f, 0.6666666666666087f, -13.499999999998941f, 63.99999999999545f, -104.16666666665994f, 53.99999999999682f};
+static arm_matrix_instance_f32 inv;
+static float32_t X_ori[POLY * POLY];
+static float32_t X_inv[POLY * POLY];
 static float32_t X_30[(MAX_PAPER_NUM + 1) * POLY];
 static float32_t Y_5[POLY];
 static float32_t coef_5[POLY];
@@ -63,10 +65,24 @@ void testing_transition(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void Get_Inv_Matrix(void)
+{
+  volatile arm_status ast;
+  for (uint8_t i = 0; i < POLY; ++i)
+  {
+    for (uint8_t j = 0; j < POLY; ++j)
+    {
+      X_ori[i * POLY + j] = 1.0f / powf(i * POLY + 10, POLY - 1 - j);
+    }
+  }
+  arm_matrix_instance_f32 x_ori = {POLY, POLY, (float32_t*)X_ori};
+  arm_mat_init_f32(&inv, POLY, POLY, (float32_t*)X_inv);
+  ast = arm_mat_inverse_f32(&x_ori, &inv);
+}
 void Fit_Cap_Curve(void)
 {
 	volatile arm_status ast;
-  arm_matrix_instance_f32 inv = {POLY, POLY, (float32_t*)inv_array};
+  // arm_matrix_instance_f32 inv = {POLY, POLY, (float32_t*)inv_array};
   arm_matrix_instance_f32 Y = {MAX_PAPER_NUM + 1, 1, (float32_t*)Y_30};
   for (uint8_t i = 0; i < POLY; ++i)
   {
@@ -175,9 +191,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
- 
   UARTHMI_Forget_It();
   UARTHMI_Reset();
+  Get_Inv_Matrix();
   HAL_Delay(150);
   // testing_transition();
   /* USER CODE END 2 */
