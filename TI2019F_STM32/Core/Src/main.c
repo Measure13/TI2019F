@@ -35,7 +35,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define POLY 5
+#define POLY 6
+#define LAYER 5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -72,7 +73,7 @@ void Get_Inv_Matrix(void)
   {
     for (uint8_t j = 0; j < POLY; ++j)
     {
-      X_ori[i * POLY + j] = 1.0f / powf(i * POLY + 10, POLY - 1 - j);
+      X_ori[i * POLY + j] = 1.0f / powf(i * LAYER + 10, POLY - 1 - j);
     }
   }
   arm_matrix_instance_f32 x_ori = {POLY, POLY, (float32_t*)X_ori};
@@ -86,12 +87,12 @@ void Fit_Cap_Curve(void)
   arm_matrix_instance_f32 Y = {MAX_PAPER_NUM + 1, 1, (float32_t*)Y_30};
   for (uint8_t i = 0; i < POLY; ++i)
   {
-    Y_5[i] = (float32_t)cap_paper[i * 5 + 10];
+    Y_5[i] = (float32_t)cap_paper[i * LAYER + 10];
   }
   arm_matrix_instance_f32 y = {POLY, 1, (float32_t*)Y_5};
   arm_matrix_instance_f32 coef = {POLY, 1, (float32_t*)coef_5};
   ast = arm_mat_mult_f32(&inv, &y, &coef);
-  for (uint8_t i = 5; i < MAX_PAPER_NUM + 1; ++i)
+  for (uint8_t i = 11; i < MAX_PAPER_NUM + 1; ++i)
   {
     for (uint8_t j = 0; j < POLY; ++j)
     {
@@ -100,7 +101,7 @@ void Fit_Cap_Curve(void)
   }
   arm_matrix_instance_f32 X = {MAX_PAPER_NUM + 1, POLY, (float32_t*)X_30};
   ast = arm_mat_mult_f32(&X, &coef, &Y);
-  for (uint8_t i = 10; i < MAX_PAPER_NUM + 1; ++i)
+  for (uint8_t i = 11; i < MAX_PAPER_NUM + 1; ++i)
   {
       cap_paper[i] = (uint32_t)(Y_30[i] + 0.5f);
   }
