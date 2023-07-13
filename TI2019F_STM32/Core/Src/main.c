@@ -35,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define POLY 6
+#define POLY 7
 #define LAYER 5
 /* USER CODE END PD */
 

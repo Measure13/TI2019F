@@ -157,22 +157,6 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>82</LineNumber>
-          <EnabledFlag>0</EnabledFlag>
-          <Address>134218888</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\TI2019F_STM32\../Core/Src/main.c\82</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
           <LineNumber>217</LineNumber>
           <EnabledFlag>0</EnabledFlag>
           <Address>134218166</Address>
@@ -187,23 +171,7 @@
           <Expression>\\TI2019F_STM32\startup_stm32f407xx.s\217</Expression>
         </Bp>
         <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>80</LineNumber>
-          <EnabledFlag>0</EnabledFlag>
-          <Address>134218864</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\TI2019F_STM32\../Core/Src/main.c\80</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
+          <Number>1</Number>
           <Type>0</Type>
           <LineNumber>114</LineNumber>
           <EnabledFlag>1</EnabledFlag>
@@ -219,7 +187,7 @@
           <Expression></Expression>
         </Bp>
         <Bp>
-          <Number>4</Number>
+          <Number>2</Number>
           <Type>0</Type>
           <LineNumber>251</LineNumber>
           <EnabledFlag>1</EnabledFlag>
