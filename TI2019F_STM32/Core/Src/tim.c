@@ -30,6 +30,7 @@ uint32_t TIM3_Array[TIM3_MEDIAN_WINDOW];
 uint16_t volatile TIM_IC_cnt = 0;
 uint32_t TIM_final = 0;
 uint8_t paper_num = 0;
+static uint8_t CH2_cnt = 0, CH3_cnt = 0;
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -52,7 +53,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0x20000;
+  htim2.Init.Period = 0xE0000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -313,51 +314,86 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
    */
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
   {
-    if(tri_flag == false)
+    ++CH2_cnt;
+    if (CH2_cnt >= 128)
     {
-      __HAL_TIM_SET_COUNTER(&htim2, 0);
-      tri_flag = true;
-    }
-    else
-    {
+		CH2_cnt = 0;
       TIM2_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
-      tri_flag = false;
-      if (TIM_IC_cnt == TIM2_MEDIAN_WINDOW)
+      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      if (TIM_IC_cnt >= TIM2_MEDIAN_WINDOW)
       {
+        HAL_TIM_Base_Stop_IT(&htim2);
+        HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
         TIM_final = median_u(TIM2_Array, TIM2_MEDIAN_WINDOW, true);
-        TIM_IC_cnt = 0;
-        end_flag = true;
         if (mode == FLAG_CALIBRA)
         {
           cap_paper[paper_num] = TIM_final;
         }
-        HAL_TIM_Base_Stop_IT(&htim2);
-        HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
+        TIM_IC_cnt = 0;
+        end_flag = true;
       }
-	  __HAL_TIM_SET_COUNTER(&htim2, 0);
     }
+    
+    // if(tri_flag == false)
+    // {
+    //   __HAL_TIM_SET_COUNTER(&htim2, 0);
+    //   tri_flag = true;
+    // }
+    // else
+    // {
+    //   TIM2_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
+    //   tri_flag = false;
+    //   if (TIM_IC_cnt == TIM2_MEDIAN_WINDOW)
+    //   {
+    //     TIM_final = median_u(TIM2_Array, TIM2_MEDIAN_WINDOW, true);
+    //     TIM_IC_cnt = 0;
+    //     end_flag = true;
+    //     if (mode == FLAG_CALIBRA)
+    //     {
+    //       cap_paper[paper_num] = TIM_final;
+    //     }
+    //     HAL_TIM_Base_Stop_IT(&htim2);
+    //     HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
+    //   }
+	  // __HAL_TIM_SET_COUNTER(&htim2, 0);
+    // }
   }
   else if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
   {
-    if(tim3_tri_flag == false)
+    ++CH3_cnt;
+    if (CH3_cnt >= 8)
     {
-      __HAL_TIM_SET_COUNTER(&htim2, 0);
-      tim3_tri_flag = true;
-    }
-    else
-    {
+		CH3_cnt = 0;
       TIM3_Array[TIM_IC_cnt++] = htim2.Instance->CCR3;
-      tim3_tri_flag = false;
-      if (TIM_IC_cnt == TIM3_MEDIAN_WINDOW)
+      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      if (TIM_IC_cnt >= TIM3_MEDIAN_WINDOW)
       {
+        HAL_TIM_Base_Stop_IT(&htim2);
+        HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
         TIM_final = median_u(TIM3_Array, TIM3_MEDIAN_WINDOW, true);
         TIM_IC_cnt = 0;
         tim3_end_flag = true;
-        HAL_TIM_Base_Stop_IT(&htim2);
-        HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
       }
-	  __HAL_TIM_SET_COUNTER(&htim2, 0);
     }
+    // if(tim3_tri_flag == false)
+    // {
+    //   __HAL_TIM_SET_COUNTER(&htim2, 0);
+    //   tim3_tri_flag = true;
+    // }
+    // else
+    // {
+    //   TIM3_Array[TIM_IC_cnt++] = htim2.Instance->CCR3;
+    //   tim3_tri_flag = false;
+    //   if (TIM_IC_cnt == TIM3_MEDIAN_WINDOW)
+    //   {
+    //     TIM_final = median_u(TIM3_Array, TIM3_MEDIAN_WINDOW, true);
+    //     TIM_IC_cnt = 0;
+    //     tim3_end_flag = true;
+    //     HAL_TIM_Base_Stop_IT(&htim2);
+    //     HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
+    //   }
+	  // __HAL_TIM_SET_COUNTER(&htim2, 0);
+    // }
   }
 }
 /* USER CODE END 1 */

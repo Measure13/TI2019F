@@ -106,38 +106,18 @@ void Fit_Cap_Curve(void)
   {
       cap_paper[i] = (uint32_t)(Y_30[i] + 0.5f);
   }
-}
-
-static uint8_t Get_Paper_Number(uint32_t tim)
-{
-  for (uint8_t i = 1; i <= MAX_PAPER_NUM; ++i)
+  for (uint8_t i = 1; i < 11; ++i)
   {
-    if (tim >= cap_paper[i])
-    {
-      return i;
-    }
-    else
-    {
-      if (i == MAX_PAPER_NUM)
-      {
-        return Further_Paper_Sensing();
-      }
-      else if (1.0f / (tim * tim) < (1.0f / (cap_paper[i] * cap_paper[i]) + 1.0f / (cap_paper[i + 1] * cap_paper[i + 1])) / 2)
-      {
-        return i;
-      }
-    }
-    
+	Y_30[i] = (float)cap_paper[i];
   }
 }
 
-static uint8_t Further_Paper_Sensing(void)
+static uint8_t Get_Paper_Number(void)
 {
-  TIM3_Start();
-  while (!tim3_end_flag);
-  for (uint8_t i = MAX_PAPER_NUM; i <= CALC_LIMIT; ++i)
+	float tim = (float)TIM_final;
+  for (uint8_t i = 1; i <= CALC_LIMIT; ++i)
   {
-    if ((float)(TIM_final) >= Y_30[i] * 16.0f)
+    if (tim >= Y_30[i])
     {
       return i;
     }
@@ -145,9 +125,9 @@ static uint8_t Further_Paper_Sensing(void)
     {
       if (i == CALC_LIMIT)
       {
-        return CALC_LIMIT;
+        return i;
       }
-      else if (1.0f / (TIM_final * TIM_final) < (1.0f / (Y_30[i] * 16.0f * Y_30[i] * 16.0f) + 1.0f / (Y_30[i + 1] * 16.0f * Y_30[i + 1] * 16.0f)) / 2)
+      else if (10000000000.0f / (tim * tim) < (10000000000.0f / (Y_30[i] * Y_30[i]) + 10000000000.0f / (Y_30[i + 1] * Y_30[i + 1])) / 2)
       {
         return i;
       }
@@ -155,6 +135,31 @@ static uint8_t Further_Paper_Sensing(void)
     
   }
 }
+
+// static uint8_t Further_Paper_Sensing(void)
+// {
+//   TIM3_Start();
+//   while (!tim3_end_flag);
+//   for (uint8_t i = MAX_PAPER_NUM; i <= CALC_LIMIT; ++i)
+//   {
+//     if ((float)(TIM_final) >= Y_30[i] * 16.0f)
+//     {
+//       return i;
+//     }
+//     else
+//     {
+//       if (i == CALC_LIMIT)
+//       {
+//         return CALC_LIMIT;
+//       }
+//       else if (1.0f / (TIM_final * TIM_final) < (1.0f / (Y_30[i] * 16.0f * Y_30[i] * 16.0f) + 1.0f / (Y_30[i + 1] * 16.0f * Y_30[i + 1] * 16.0f)) / 2)
+//       {
+//         return i;
+//       }
+//     }
+    
+//   }
+// }
 
 // static void testing_transition(void)
 // {
@@ -262,7 +267,7 @@ int main(void)
         else
         {
           UARTHMI_Visibility_Change(2, 0);
-          UARTHMI_Send_Number(1, Get_Paper_Number(TIM_final));
+          UARTHMI_Send_Number(1, Get_Paper_Number());
           BEEP;
           HAL_Delay(500);
           NOBB;

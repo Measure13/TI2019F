@@ -1,11 +1,11 @@
 Dependencies for Project 'TI2019F_STM32', Target 'TI2019F_STM32': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARM_Compiler_5.06u7
-F (startup_stm32f407xx.s)(0x64AF804D)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 537" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o ti2019f_stm32\startup_stm32f407xx.o --depend ti2019f_stm32\startup_stm32f407xx.d)
+F (startup_stm32f407xx.s)(0x64AFA88E)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 537" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o ti2019f_stm32\startup_stm32f407xx.o --depend ti2019f_stm32\startup_stm32f407xx.d)
 F (..\Core\Src\USART_HMI.c)(0x64AC136D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\usart_hmi.o --omf_browse ti2019f_stm32\usart_hmi.crf --depend ti2019f_stm32\usart_hmi.d)
 I (../Core/Inc/USART_HMI.h)(0x64ABF3CC)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdbool.h)(0x5E8E3CC2)
 I (../Core/Inc/usart.h)(0x64AC084E)
-I (../Core/Inc/main.h)(0x64AF6A63)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)
@@ -42,8 +42,8 @@ I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdlib.h)(0x5E8E3CC2)
 I (../Core/Inc/tim.h)(0x64AF6AFE)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\math.h)(0x5E8E3CC2)
 F (..\Core\Inc\USART_HMI.h)(0x64ABF3CC)()
-F (../Core/Src/main.c)(0x64AF9244)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\main.o --omf_browse ti2019f_stm32\main.crf --depend ti2019f_stm32\main.d)
-I (../Core/Inc/main.h)(0x64AF6A63)
+F (../Core/Src/main.c)(0x64AFAFB4)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\main.o --omf_browse ti2019f_stm32\main.crf --depend ti2019f_stm32\main.d)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)
@@ -107,7 +107,7 @@ I (D:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include\dsp\filterin
 I (D:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include\dsp\quaternion_math_functions.h)(0x626F4ADE)
 F (../Core/Src/gpio.c)(0x64ABA65E)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\gpio.o --omf_browse ti2019f_stm32\gpio.crf --depend ti2019f_stm32\gpio.d)
 I (../Core/Inc/gpio.h)(0x64ABA0CB)
-I (../Core/Inc/main.h)(0x64AF6A63)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)
@@ -142,9 +142,9 @@ I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdio.h)(0x5E8E3CC2)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdbool.h)(0x5E8E3CC2)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\string.h)(0x5E8E3CC2)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdlib.h)(0x5E8E3CC2)
-F (../Core/Src/tim.c)(0x64AF9479)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\tim.o --omf_browse ti2019f_stm32\tim.crf --depend ti2019f_stm32\tim.d)
+F (../Core/Src/tim.c)(0x64AFA88A)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\tim.o --omf_browse ti2019f_stm32\tim.crf --depend ti2019f_stm32\tim.d)
 I (../Core/Inc/tim.h)(0x64AF6AFE)
-I (../Core/Inc/main.h)(0x64AF6A63)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)
@@ -182,7 +182,7 @@ I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdlib.h)(0x5E8E3CC2)
 I (../Core/Inc/usart.h)(0x64AC084E)
 F (../Core/Src/usart.c)(0x64AF517F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\usart.o --omf_browse ti2019f_stm32\usart.crf --depend ti2019f_stm32\usart.d)
 I (../Core/Inc/usart.h)(0x64AC084E)
-I (../Core/Inc/main.h)(0x64AF6A63)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)
@@ -219,7 +219,7 @@ I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\string.h)(0x5E8E3CC2)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdlib.h)(0x5E8E3CC2)
 I (../Core/Inc/tim.h)(0x64AF6AFE)
 F (../Core/Src/stm32f4xx_it.c)(0x64AB7F01)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\stm32f4xx_it.o --omf_browse ti2019f_stm32\stm32f4xx_it.crf --depend ti2019f_stm32\stm32f4xx_it.d)
-I (../Core/Inc/main.h)(0x64AF6A63)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)
@@ -256,7 +256,7 @@ I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\string.h)(0x5E8E3CC2)
 I (D:\Softwares\Keil5\ARM\ARM_Compiler_5.06u7\include\stdlib.h)(0x5E8E3CC2)
 I (../Core/Inc/stm32f4xx_it.h)(0x64AB7F01)
 F (../Core/Src/stm32f4xx_hal_msp.c)(0x64A9811D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include-I.\RTE\_TI2019F_STM32-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\Include-ID:\SoftwareDocuments\Keil5Pack\ARM\CMSIS\5.9.0\CMSIS\DSP\PrivateInclude-ID:\SoftwareDocuments\Keil5Pack\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o ti2019f_stm32\stm32f4xx_hal_msp.o --omf_browse ti2019f_stm32\stm32f4xx_hal_msp.crf --depend ti2019f_stm32\stm32f4xx_hal_msp.d)
-I (../Core/Inc/main.h)(0x64AF6A63)
+I (../Core/Inc/main.h)(0x64AFA364)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6424212E)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x64AB7D22)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6424212E)

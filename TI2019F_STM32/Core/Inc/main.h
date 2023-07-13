@@ -53,7 +53,7 @@ extern bool volatile mode;
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define TIM3_MEDIAN_WINDOW 15
-#define TIM2_MEDIAN_WINDOW 255
+#define TIM2_MEDIAN_WINDOW 15
 #define TIM2_CLOCK 84000000 // 79M
 /* USER CODE END EM */
 
