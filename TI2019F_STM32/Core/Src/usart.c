@@ -28,7 +28,7 @@
 #define UART_RX_BUF_SIZE 2048 // 1024 * sizeof(uint16_t)
 
 uint8_t USART_RxBuffer = 0;
-bool volatile recving = false;
+bool volatile start_measuring = false;
 extern uint32_t adc_freq;
 
 static uint8_t uart1_rx_bp[UART_RX_BUF_SIZE];
@@ -142,9 +142,6 @@ int fputc(int ch, FILE *stream)
 
 void UART_RX_Data_Parse(uint8_t* p, uint8_t cnt)
 {
-  initialization_done = false;
-  ready_to_receive = false;
-  receive_done = false;
 	switch (p[0])
   {
   case PAPER_NUMBER:
@@ -158,7 +155,7 @@ void UART_RX_Data_Parse(uint8_t* p, uint8_t cnt)
     if (!mode)
     {
       TIM2_Start();
-      recving = true;
+      start_measuring = true;
     }
     break;
   case MODE_MEASURE:
@@ -167,15 +164,6 @@ void UART_RX_Data_Parse(uint8_t* p, uint8_t cnt)
     break;
   case MODE_CALIBRA:
     mode = FLAG_CALIBRA;
-    break;
-  case 0x88:
-    initialization_done = true;
-    break;
-  case 0xFE:
-    ready_to_receive = true;
-    break;
-  case 0xFD:
-    receive_done = true;
     break;
   default:
     break;

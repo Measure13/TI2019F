@@ -23,8 +23,7 @@
 /* USER CODE BEGIN 0 */
 #include "usart.h"
 bool volatile short_circuit = false;
-bool volatile end_flag = false, tri_flag = false, tim3_end_flag = false, tim3_tri_flag = false;
-bool volatile tim2_update = false;
+bool volatile ch2_end_flag = false, ch3_end_flag = false;
 uint32_t TIM2_Array[TIM2_MEDIAN_WINDOW];
 uint32_t TIM3_Array[TIM3_MEDIAN_WINDOW];
 uint16_t volatile TIM_IC_cnt = 0;
@@ -53,7 +52,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0xE0000;
+  htim2.Init.Period = 0x200000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -301,6 +300,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     short_circuit = true;
     HAL_TIM_Base_Stop_IT(&htim2);
     HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
+    HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
   }
 }
 
@@ -317,7 +317,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     ++CH2_cnt;
     if (CH2_cnt >= 128)
     {
-		CH2_cnt = 0;
+		  CH2_cnt = 0;
       TIM2_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
       __HAL_TIM_SET_COUNTER(&htim2, 0);
       if (TIM_IC_cnt >= TIM2_MEDIAN_WINDOW)
@@ -330,40 +330,16 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
           cap_paper[paper_num] = TIM_final;
         }
         TIM_IC_cnt = 0;
-        end_flag = true;
+        ch2_end_flag = true;
       }
     }
-    
-    // if(tri_flag == false)
-    // {
-    //   __HAL_TIM_SET_COUNTER(&htim2, 0);
-    //   tri_flag = true;
-    // }
-    // else
-    // {
-    //   TIM2_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
-    //   tri_flag = false;
-    //   if (TIM_IC_cnt == TIM2_MEDIAN_WINDOW)
-    //   {
-    //     TIM_final = median_u(TIM2_Array, TIM2_MEDIAN_WINDOW, true);
-    //     TIM_IC_cnt = 0;
-    //     end_flag = true;
-    //     if (mode == FLAG_CALIBRA)
-    //     {
-    //       cap_paper[paper_num] = TIM_final;
-    //     }
-    //     HAL_TIM_Base_Stop_IT(&htim2);
-    //     HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
-    //   }
-	  // __HAL_TIM_SET_COUNTER(&htim2, 0);
-    // }
   }
   else if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
   {
     ++CH3_cnt;
-    if (CH3_cnt >= 8)
+    if (CH3_cnt >= 8) //! because the 16 prescale in hardware
     {
-		CH3_cnt = 0;
+		  CH3_cnt = 0;
       TIM3_Array[TIM_IC_cnt++] = htim2.Instance->CCR3;
       __HAL_TIM_SET_COUNTER(&htim2, 0);
       if (TIM_IC_cnt >= TIM3_MEDIAN_WINDOW)
@@ -372,28 +348,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
         HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
         TIM_final = median_u(TIM3_Array, TIM3_MEDIAN_WINDOW, true);
         TIM_IC_cnt = 0;
-        tim3_end_flag = true;
+        ch3_end_flag = true;
       }
     }
-    // if(tim3_tri_flag == false)
-    // {
-    //   __HAL_TIM_SET_COUNTER(&htim2, 0);
-    //   tim3_tri_flag = true;
-    // }
-    // else
-    // {
-    //   TIM3_Array[TIM_IC_cnt++] = htim2.Instance->CCR3;
-    //   tim3_tri_flag = false;
-    //   if (TIM_IC_cnt == TIM3_MEDIAN_WINDOW)
-    //   {
-    //     TIM_final = median_u(TIM3_Array, TIM3_MEDIAN_WINDOW, true);
-    //     TIM_IC_cnt = 0;
-    //     tim3_end_flag = true;
-    //     HAL_TIM_Base_Stop_IT(&htim2);
-    //     HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
-    //   }
-	  // __HAL_TIM_SET_COUNTER(&htim2, 0);
-    // }
   }
 }
 /* USER CODE END 1 */

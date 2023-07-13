@@ -45,10 +45,7 @@ void MX_USART1_UART_Init(void);
 void USART_Conv_Data(uint16_t* adc_data_p, uint16_t length);
 void USART_Send_Data_Direct(uint8_t* data_p, uint16_t data_len);
 void USART_Send_Data_Temp(uint8_t* data_p, uint16_t data_len);
-extern bool volatile recving;
-extern bool volatile initialization_done;
-extern bool volatile ready_to_receive;
-extern bool volatile receive_done;
+extern bool volatile start_measuring;
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

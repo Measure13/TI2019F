@@ -42,11 +42,8 @@ void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 extern bool volatile short_circuit;
-extern bool volatile end_flag;
-extern bool volatile tri_flag;
-extern bool volatile tim3_end_flag;
-extern bool volatile tim3_tri_flag;
-extern bool volatile tim2_update;
+extern bool volatile ch2_end_flag;
+extern bool volatile ch3_end_flag;
 extern uint16_t volatile TIM_IC_cnt;
 extern uint32_t TIM_final;
 extern uint32_t TIM2_Array[TIM2_MEDIAN_WINDOW];

@@ -45,7 +45,7 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 #define MAX_PAPER_NUM 45
-#define CALC_LIMIT    60
+#define CALC_LIMIT    80
 extern uint32_t cap_paper[MAX_PAPER_NUM + 1];
 extern bool volatile mode;
 /* USER CODE END EC */

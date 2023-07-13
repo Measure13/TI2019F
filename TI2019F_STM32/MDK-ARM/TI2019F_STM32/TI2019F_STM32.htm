@@ -3,11 +3,11 @@
 <title>Static Call Graph - [TI2019F_STM32\TI2019F_STM32.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image TI2019F_STM32\TI2019F_STM32.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Jul 13 16:03:02 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Jul 13 18:26:27 2023
 <BR><P>
-<H3>Maximum Stack Usage =        180 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        176 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-USART1_IRQHandler &rArr; HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
+main &rArr; SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_NVIC_SetPriority &rArr; assert_failed &rArr; __2printf
 <P>
 <H3>
 Mutually Recursive functions
@@ -786,7 +786,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IRQHandler
 </UL>
 
-<P><STRONG><a name="[9b]"></a>HAL_TIM_PeriodElapsedCallback</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, tim.o(i.HAL_TIM_PeriodElapsedCallback))
+<P><STRONG><a name="[9b]"></a>HAL_TIM_PeriodElapsedCallback</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, tim.o(i.HAL_TIM_PeriodElapsedCallback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = HAL_TIM_PeriodElapsedCallback &rArr; HAL_TIM_IC_Stop_IT &rArr; TIM_CCxChannelCmd &rArr; assert_failed &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IC_Stop_IT
@@ -814,15 +814,15 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[9f]"></a>HAL_UART_IRQHandler</STRONG> (Thumb, 610 bytes, Stack size 24 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 180<LI>Call Chain = HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
+<BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
-<LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
+<BR>[Calls]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_TxCpltCallback
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
 </UL>
 <BR>[Called By]<UL><LI><a href="#[30]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART1_IRQHandler
 </UL>
@@ -856,7 +856,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ab]"></a>HAL_UART_RxCpltCallback</STRONG> (Thumb, 84 bytes, Stack size 8 bytes, usart.o(i.HAL_UART_RxCpltCallback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
+<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive_IT
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_RX_Data_Parse
@@ -893,7 +893,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b0]"></a>MX_TIM2_Init</STRONG> (Thumb, 156 bytes, Stack size 48 bytes, tim.o(i.MX_TIM2_Init))
+<P><STRONG><a name="[b0]"></a>MX_TIM2_Init</STRONG> (Thumb, 154 bytes, Stack size 48 bytes, tim.o(i.MX_TIM2_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = MX_TIM2_Init &rArr; HAL_TIM_Base_Init &rArr; HAL_TIM_Base_MspInit &rArr; HAL_GPIO_Init &rArr; assert_failed &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IC_Init
@@ -1036,8 +1036,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ac]"></a>UART_RX_Data_Parse</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, usart.o(i.UART_RX_Data_Parse))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
+<P><STRONG><a name="[ac]"></a>UART_RX_Data_Parse</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, usart.o(i.UART_RX_Data_Parse))
+<BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_Start
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fit_Cap_Curve
@@ -1050,7 +1050,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[30]"></a>USART1_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.USART1_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 180<LI>Call Chain = USART1_IRQHandler &rArr; HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
+<BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = USART1_IRQHandler &rArr; HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
@@ -1186,9 +1186,9 @@ Global Symbols
 <LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_OscConfig
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_CCxChannelCmd
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_CCxChannelCmd
 </UL>
 
 <P><STRONG><a name="[60]"></a>fputc</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, usart.o(i.fputc))
@@ -1260,7 +1260,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[d1]"></a>Get_Paper_Number</STRONG> (Thumb, 102 bytes, Stack size 0 bytes, main.o(i.Get_Paper_Number))
+<P><STRONG><a name="[d1]"></a>Get_Paper_Number</STRONG> (Thumb, 104 bytes, Stack size 0 bytes, main.o(i.Get_Paper_Number))
 <BR><BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -1306,7 +1306,7 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[a0]"></a>UART_Receive_IT</STRONG> (Thumb, 192 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.UART_Receive_IT))
-<BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
+<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; UART_RX_Data_Parse &rArr; Fit_Cap_Curve &rArr; arm_mat_mult_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_RxCpltCallback
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback

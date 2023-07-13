@@ -61,8 +61,7 @@ static float32_t Y_30[CALC_LIMIT + 1];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-// static void testing_transition(void);
-static uint8_t Further_Paper_Sensing(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -132,64 +131,9 @@ static uint8_t Get_Paper_Number(void)
         return i;
       }
     }
-    
   }
+  return 0; //* To avoid warning, :(
 }
-
-// static uint8_t Further_Paper_Sensing(void)
-// {
-//   TIM3_Start();
-//   while (!tim3_end_flag);
-//   for (uint8_t i = MAX_PAPER_NUM; i <= CALC_LIMIT; ++i)
-//   {
-//     if ((float)(TIM_final) >= Y_30[i] * 16.0f)
-//     {
-//       return i;
-//     }
-//     else
-//     {
-//       if (i == CALC_LIMIT)
-//       {
-//         return CALC_LIMIT;
-//       }
-//       else if (1.0f / (TIM_final * TIM_final) < (1.0f / (Y_30[i] * 16.0f * Y_30[i] * 16.0f) + 1.0f / (Y_30[i + 1] * 16.0f * Y_30[i + 1] * 16.0f)) / 2)
-//       {
-//         return i;
-//       }
-//     }
-    
-//   }
-// }
-
-// static void testing_transition(void)
-// {
-// 	cap_paper[1] = 0x0000;
-// 	cap_paper[2] = 0x0000;
-// 	cap_paper[3] = 0x0000;
-// 	cap_paper[4] = 0x0000;
-// 	cap_paper[5] = 0x0000;
-// 	cap_paper[6] = 0x0000;
-// 	cap_paper[7] = 0x0000;
-// 	cap_paper[8] = 0x0000;
-// 	cap_paper[9] = 0x0000;
-//   cap_paper[10] = 0x23d1;
-//   cap_paper[15] = 0x1b90;
-//   cap_paper[20] = 0x16a5;
-//   cap_paper[25] = 0x1354;
-//   cap_paper[30] = 0x1206;
-// 	Fit_Cap_Curve();
-// 	mode = FLAG_MEASURE;
-// 	for (uint8_t i = 0; i < 12; ++i)
-// 	{
-// 		printf("vis b%d,0\xff\xff\xff", i);
-// 		HAL_Delay(1);
-// 	}
-// 	printf("vis bt0,0\xff\xff\xff");
-// 	HAL_Delay(1);
-// 	printf("vis n0,0\xff\xff\xff");
-// 	HAL_Delay(1);
-// 	UARTHMI_Visibility_Change(1, 0);
-// }
 /* USER CODE END 0 */
 
 /**
@@ -227,7 +171,6 @@ int main(void)
   UARTHMI_Reset();
   Get_Inv_Matrix();
   HAL_Delay(150);
-  // testing_transition();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -237,43 +180,34 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // if (TIM_final != 0)
-    // {
-    //   printf("\nTIME:%lu %.10lfs\n", TIM_final, (double)(TIM_final + 1) / (TIM2_CLOCK));
-    //   TIM_final = 0;
-    //   __HAL_TIM_SET_COUNTER(&htim2, 0);
-    //   __HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
-    //   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
-    //   HAL_TIM_Base_Start_IT(&htim2);
-    // }
     if (mode)
     {
-      if (end_flag)
+      if (ch2_end_flag)
       {
-        end_flag = false;
+        ch2_end_flag = false;
         printf("n0.pco=64512\xff\xff\xff");
       }
     }
     else
     {
-      if (recving)
+      if (start_measuring)
       {
-        while (!(end_flag || short_circuit));
+        while (!(ch2_end_flag || short_circuit));
         if (short_circuit)
         {
-          UARTHMI_Visibility_Change(2, 1);
+          UARTHMI_Visibility_Change(2, true);
           short_circuit = false;
         }
         else
         {
-          UARTHMI_Visibility_Change(2, 0);
+          UARTHMI_Visibility_Change(2, false);
           UARTHMI_Send_Number(1, Get_Paper_Number());
           BEEP;
           HAL_Delay(500);
           NOBB;
-          end_flag = false;
+          ch2_end_flag = false;
         }
-		    recving = false;
+		    start_measuring = false;
       }
     }
   }
