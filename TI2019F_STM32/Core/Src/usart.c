@@ -151,13 +151,13 @@ void UART_RX_Data_Parse(uint8_t* p, uint8_t cnt)
     if (mode)
     {
       paper_num = p[1];
-      TIM_Wait_For_Done();
+      TIM2_Start();
     }
     break;
   case START_MEASURE:
     if (!mode)
     {
-      TIM_Wait_For_Done();
+      TIM2_Start();
       recving = true;
     }
     break;

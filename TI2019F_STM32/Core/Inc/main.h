@@ -45,13 +45,15 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 #define MAX_PAPER_NUM 45
+#define CALC_LIMIT    60
 extern uint32_t cap_paper[MAX_PAPER_NUM + 1];
 extern bool volatile mode;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define TIM_MEDIAN_WINDOW 255
+#define TIM3_MEDIAN_WINDOW 15
+#define TIM2_MEDIAN_WINDOW 255
 #define TIM2_CLOCK 84000000 // 79M
 /* USER CODE END EM */
 

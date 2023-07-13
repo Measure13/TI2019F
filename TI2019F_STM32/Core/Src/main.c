@@ -52,21 +52,22 @@ bool volatile mode = true;
 static arm_matrix_instance_f32 inv;
 static float32_t X_ori[POLY * POLY];
 static float32_t X_inv[POLY * POLY];
-static float32_t X_30[(MAX_PAPER_NUM + 1) * POLY];
+static float32_t X_30[(CALC_LIMIT + 1) * POLY];
 static float32_t Y_5[POLY];
 static float32_t coef_5[POLY];
-static float32_t Y_30[MAX_PAPER_NUM + 1];
+static float32_t Y_30[CALC_LIMIT + 1];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void testing_transition(void);
+// static void testing_transition(void);
+static uint8_t Further_Paper_Sensing(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void Get_Inv_Matrix(void)
+static void Get_Inv_Matrix(void)
 {
   volatile arm_status ast;
   for (uint8_t i = 0; i < POLY; ++i)
@@ -80,11 +81,11 @@ void Get_Inv_Matrix(void)
   arm_mat_init_f32(&inv, POLY, POLY, (float32_t*)X_inv);
   ast = arm_mat_inverse_f32(&x_ori, &inv);
 }
+
 void Fit_Cap_Curve(void)
 {
 	volatile arm_status ast;
-  // arm_matrix_instance_f32 inv = {POLY, POLY, (float32_t*)inv_array};
-  arm_matrix_instance_f32 Y = {MAX_PAPER_NUM + 1, 1, (float32_t*)Y_30};
+  arm_matrix_instance_f32 Y = {CALC_LIMIT + 1, 1, (float32_t*)Y_30};
   for (uint8_t i = 0; i < POLY; ++i)
   {
     Y_5[i] = (float32_t)cap_paper[i * LAYER + 10];
@@ -92,14 +93,14 @@ void Fit_Cap_Curve(void)
   arm_matrix_instance_f32 y = {POLY, 1, (float32_t*)Y_5};
   arm_matrix_instance_f32 coef = {POLY, 1, (float32_t*)coef_5};
   ast = arm_mat_mult_f32(&inv, &y, &coef);
-  for (uint8_t i = 11; i < MAX_PAPER_NUM + 1; ++i)
+  for (uint8_t i = 11; i < CALC_LIMIT + 1; ++i)
   {
     for (uint8_t j = 0; j < POLY; ++j)
     {
       X_30[i * POLY + j] = 1.0f / powf(i, POLY - 1 - j);
     }
   }
-  arm_matrix_instance_f32 X = {MAX_PAPER_NUM + 1, POLY, (float32_t*)X_30};
+  arm_matrix_instance_f32 X = {CALC_LIMIT + 1, POLY, (float32_t*)X_30};
   ast = arm_mat_mult_f32(&X, &coef, &Y);
   for (uint8_t i = 11; i < MAX_PAPER_NUM + 1; ++i)
   {
@@ -107,7 +108,7 @@ void Fit_Cap_Curve(void)
   }
 }
 
-uint8_t Get_Paper_Number(uint32_t tim)
+static uint8_t Get_Paper_Number(uint32_t tim)
 {
   for (uint8_t i = 1; i <= MAX_PAPER_NUM; ++i)
   {
@@ -119,7 +120,7 @@ uint8_t Get_Paper_Number(uint32_t tim)
     {
       if (i == MAX_PAPER_NUM)
       {
-        return MAX_PAPER_NUM;
+        return Further_Paper_Sensing();
       }
       else if (1.0f / (tim * tim) < (1.0f / (cap_paper[i] * cap_paper[i]) + 1.0f / (cap_paper[i + 1] * cap_paper[i + 1])) / 2)
       {
@@ -130,35 +131,60 @@ uint8_t Get_Paper_Number(uint32_t tim)
   }
 }
 
-void testing_transition(void)
+static uint8_t Further_Paper_Sensing(void)
 {
-	cap_paper[1] = 0x0000;
-	cap_paper[2] = 0x0000;
-	cap_paper[3] = 0x0000;
-	cap_paper[4] = 0x0000;
-	cap_paper[5] = 0x0000;
-	cap_paper[6] = 0x0000;
-	cap_paper[7] = 0x0000;
-	cap_paper[8] = 0x0000;
-	cap_paper[9] = 0x0000;
-  cap_paper[10] = 0x23d1;
-  cap_paper[15] = 0x1b90;
-  cap_paper[20] = 0x16a5;
-  cap_paper[25] = 0x1354;
-  cap_paper[30] = 0x1206;
-	Fit_Cap_Curve();
-	mode = FLAG_MEASURE;
-	for (uint8_t i = 0; i < 12; ++i)
-	{
-		printf("vis b%d,0\xff\xff\xff", i);
-		HAL_Delay(1);
-	}
-	printf("vis bt0,0\xff\xff\xff");
-	HAL_Delay(1);
-	printf("vis n0,0\xff\xff\xff");
-	HAL_Delay(1);
-	UARTHMI_Visibility_Change(1, 0);
+  TIM3_Start();
+  while (!tim3_end_flag);
+  for (uint8_t i = MAX_PAPER_NUM; i <= CALC_LIMIT; ++i)
+  {
+    if ((float)(TIM_final) >= Y_30[i] * 16.0f)
+    {
+      return i;
+    }
+    else
+    {
+      if (i == CALC_LIMIT)
+      {
+        return CALC_LIMIT;
+      }
+      else if (1.0f / (TIM_final * TIM_final) < (1.0f / (Y_30[i] * 16.0f * Y_30[i] * 16.0f) + 1.0f / (Y_30[i + 1] * 16.0f * Y_30[i + 1] * 16.0f)) / 2)
+      {
+        return i;
+      }
+    }
+    
+  }
 }
+
+// static void testing_transition(void)
+// {
+// 	cap_paper[1] = 0x0000;
+// 	cap_paper[2] = 0x0000;
+// 	cap_paper[3] = 0x0000;
+// 	cap_paper[4] = 0x0000;
+// 	cap_paper[5] = 0x0000;
+// 	cap_paper[6] = 0x0000;
+// 	cap_paper[7] = 0x0000;
+// 	cap_paper[8] = 0x0000;
+// 	cap_paper[9] = 0x0000;
+//   cap_paper[10] = 0x23d1;
+//   cap_paper[15] = 0x1b90;
+//   cap_paper[20] = 0x16a5;
+//   cap_paper[25] = 0x1354;
+//   cap_paper[30] = 0x1206;
+// 	Fit_Cap_Curve();
+// 	mode = FLAG_MEASURE;
+// 	for (uint8_t i = 0; i < 12; ++i)
+// 	{
+// 		printf("vis b%d,0\xff\xff\xff", i);
+// 		HAL_Delay(1);
+// 	}
+// 	printf("vis bt0,0\xff\xff\xff");
+// 	HAL_Delay(1);
+// 	printf("vis n0,0\xff\xff\xff");
+// 	HAL_Delay(1);
+// 	UARTHMI_Visibility_Change(1, 0);
+// }
 /* USER CODE END 0 */
 
 /**
@@ -227,7 +253,7 @@ int main(void)
     {
       if (recving)
       {
-        while (htim2.Instance->DIER & TIM_IT_CC2);
+        while (!(end_flag || short_circuit));
         if (short_circuit)
         {
           UARTHMI_Visibility_Change(2, 1);
@@ -240,6 +266,7 @@ int main(void)
           BEEP;
           HAL_Delay(500);
           NOBB;
+          end_flag = false;
         }
 		    recving = false;
       }

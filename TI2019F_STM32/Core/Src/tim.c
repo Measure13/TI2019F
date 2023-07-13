@@ -23,8 +23,10 @@
 /* USER CODE BEGIN 0 */
 #include "usart.h"
 bool volatile short_circuit = false;
-bool volatile end_flag = 0, tri_flag = 0;
-uint32_t TIM_Array[TIM_MEDIAN_WINDOW];
+bool volatile end_flag = false, tri_flag = false, tim3_end_flag = false, tim3_tri_flag = false;
+bool volatile tim2_update = false;
+uint32_t TIM2_Array[TIM2_MEDIAN_WINDOW];
+uint32_t TIM3_Array[TIM3_MEDIAN_WINDOW];
 uint16_t volatile TIM_IC_cnt = 0;
 uint32_t TIM_final = 0;
 uint8_t paper_num = 0;
@@ -50,7 +52,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0x7fff;
+  htim2.Init.Period = 0x20000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -80,6 +82,10 @@ void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
@@ -101,8 +107,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**TIM2 GPIO Configuration
     PA1     ------> TIM2_CH2
+    PA2     ------> TIM2_CH3
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_1;
+    GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -131,8 +138,9 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
     /**TIM2 GPIO Configuration
     PA1     ------> TIM2_CH2
+    PA2     ------> TIM2_CH3
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_1|GPIO_PIN_2);
 
     /* TIM2 interrupt Deinit */
     HAL_NVIC_DisableIRQ(TIM2_IRQn);
@@ -260,12 +268,24 @@ uint32_t median_u(uint32_t* data, uint8_t len, bool flag)
     }
 }
 
-void TIM_Wait_For_Done(void)
+void TIM2_Start(void)
 {
 	__HAL_TIM_SET_COUNTER(&htim2, 0);
-    __HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
-    HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
-    HAL_TIM_Base_Start_IT(&htim2);
+  __HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
+  __HAL_TIM_CLEAR_FLAG(&htim2, TIM_FLAG_CC2);
+  __HAL_TIM_CLEAR_FLAG(&htim2, TIM_FLAG_CC3);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+  HAL_TIM_Base_Start_IT(&htim2);
+}
+
+void TIM3_Start(void)
+{
+	__HAL_TIM_SET_COUNTER(&htim2, 0);
+  __HAL_TIM_CLEAR_FLAG(&htim2, TIM_IT_UPDATE);
+  __HAL_TIM_CLEAR_FLAG(&htim2, TIM_FLAG_CC2);
+  __HAL_TIM_CLEAR_FLAG(&htim2, TIM_FLAG_CC3);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
+  HAL_TIM_Base_Start_IT(&htim2);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -276,9 +296,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_TIM_PeriodElapsedCallback could be implemented in the user file
    */
-  short_circuit = true;
-  HAL_TIM_Base_Stop_IT(&htim2);
-	HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
+  if (mode == FLAG_MEASURE){
+    short_circuit = true;
+    HAL_TIM_Base_Stop_IT(&htim2);
+    HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
+  }
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
@@ -289,27 +311,53 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_TIM_IC_CaptureCallback could be implemented in the user file
    */
-	if(tri_flag == 0)
-	{
-		__HAL_TIM_SET_COUNTER(&htim2, 0);
-		tri_flag = true;
-	}
-	else
-	{
-		TIM_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
-		tri_flag = false;
-		if (TIM_IC_cnt == TIM_MEDIAN_WINDOW)
-		{
-		  TIM_final = median_u(TIM_Array, TIM_MEDIAN_WINDOW, true);
-		  TIM_IC_cnt = 0;
-      end_flag = true;
-		  if (mode == FLAG_CALIBRA)
-		  {
-			cap_paper[paper_num] = TIM_final;
-		  }
-		  HAL_TIM_Base_Stop_IT(&htim2);
-		  HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
-		}
-	}
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+  {
+    if(tri_flag == false)
+    {
+      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      tri_flag = true;
+    }
+    else
+    {
+      TIM2_Array[TIM_IC_cnt++] = htim2.Instance->CCR2;
+      tri_flag = false;
+      if (TIM_IC_cnt == TIM2_MEDIAN_WINDOW)
+      {
+        TIM_final = median_u(TIM2_Array, TIM2_MEDIAN_WINDOW, true);
+        TIM_IC_cnt = 0;
+        end_flag = true;
+        if (mode == FLAG_CALIBRA)
+        {
+          cap_paper[paper_num] = TIM_final;
+        }
+        HAL_TIM_Base_Stop_IT(&htim2);
+        HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_2);
+      }
+	  __HAL_TIM_SET_COUNTER(&htim2, 0);
+    }
+  }
+  else if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+  {
+    if(tim3_tri_flag == false)
+    {
+      __HAL_TIM_SET_COUNTER(&htim2, 0);
+      tim3_tri_flag = true;
+    }
+    else
+    {
+      TIM3_Array[TIM_IC_cnt++] = htim2.Instance->CCR3;
+      tim3_tri_flag = false;
+      if (TIM_IC_cnt == TIM3_MEDIAN_WINDOW)
+      {
+        TIM_final = median_u(TIM3_Array, TIM3_MEDIAN_WINDOW, true);
+        TIM_IC_cnt = 0;
+        tim3_end_flag = true;
+        HAL_TIM_Base_Stop_IT(&htim2);
+        HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_3);
+      }
+	  __HAL_TIM_SET_COUNTER(&htim2, 0);
+    }
+  }
 }
 /* USER CODE END 1 */
