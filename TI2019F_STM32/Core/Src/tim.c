@@ -151,62 +151,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
-float median_f(float* data, uint8_t len, bool flag)
-{
-    if (len == 0)
-    {
-        return data[0];
-    }
-    float exchange = 0.0f;
-    if (flag)
-    {
-        for (uint8_t i = 0; i < len - 1; ++i)
-        {
-            for (uint8_t j = i + 1; j < len; ++j)
-            {
-                if (data[i] < data[j])
-                {
-                    exchange = data[j];
-                    data[j] = data[i];
-                    data[i] = exchange;
-                }
-            }
-        }
-        if (len % 2)
-        {
-            return (data[len / 2] + data[len / 2 - 1]) / 2;
-        }
-        else
-        {
-            return data[len / 2];
-        }
-    }
-    else
-    {
-        float* room = (float*)malloc(sizeof(float) * len * 2 + 1);
-        for (uint8_t i = 0; i <= len; ++i)
-        {
-            room[len - i] = (data - i)[0];
-            room[len + i] = (data + i)[0];
-        }
-        for (uint8_t i = 0; i < (2 * len); ++i)
-        {
-            for (uint8_t j = i + 1; j < (2 * len + 1); ++j)
-            {
-                if (room[i] < room[j])
-                {
-                    exchange = room[j];
-                    room[j] = room[i];
-                    room[i] = exchange;
-                }
-            }
-        }
-        exchange = room[len];
-        free(room);
-        return exchange;
-    }
-}
-
 /// @brief get the median from a array
 /// @param data the pointer to the array, whereas the position is determined by `flag`
 /// @param len the length of the array
@@ -235,11 +179,11 @@ uint32_t median_u(uint32_t* data, uint8_t len, bool flag)
         }
         if (len % 2)
         {
-            return (data[len / 2] + data[len / 2 - 1]) / 2;
+            return data[len / 2];
         }
         else
         {
-            return data[len / 2];
+            return (data[len / 2] + data[len / 2 - 1]) / 2;
         }
     }
     else
