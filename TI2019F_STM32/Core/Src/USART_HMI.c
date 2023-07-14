@@ -176,3 +176,11 @@ void UARTHMI_Visibility_Change(uint8_t txt_index, bool visiblity)
 {
     printf("vis t%d,%d\xff\xff\xff", txt_index, visiblity);
 }
+
+void UARTHMI_Cross_Page_Set_Number(uint8_t index, int number, char* page_name)
+{
+    char mes[30];
+    memset(mes, 0x00, sizeof(char) * 30);
+    sprintf(mes, "%s.n%d.val=%d\xff\xff\xff", page_name, index, number);
+    USART_Send_Data_Direct(mes, strlen((const char*)mes));
+}

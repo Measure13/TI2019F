@@ -9,6 +9,7 @@
         "stm32f4xx_hal.h": "c",
         "stm32f4xx_hal_conf.h": "c",
         "tim.h": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "usart_hmi.h": "c"
     }
 }

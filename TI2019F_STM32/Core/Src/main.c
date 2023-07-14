@@ -103,11 +103,15 @@ void Fit_Cap_Curve(void)
   ast = arm_mat_mult_f32(&X, &coef, &Y);
   for (uint8_t i = 11; i < MAX_PAPER_NUM + 1; ++i)
   {
-      cap_paper[i] = (uint32_t)(Y_30[i] + 0.5f);
+    cap_paper[i] = (uint32_t)(Y_30[i] + 0.5f);
   }
   for (uint8_t i = 1; i < 11; ++i)
   {
-	Y_30[i] = (float)cap_paper[i];
+	  Y_30[i] = (float)cap_paper[i];
+  }
+  for (uint8_t i = 1; i <= CALC_LIMIT; ++i)
+  {
+    UARTHMI_Cross_Page_Set_Number(i, (int)Y_30[i], "page1");
   }
 }
 
@@ -186,6 +190,7 @@ int main(void)
       {
         ch2_end_flag = false;
         printf("n0.pco=64512\xff\xff\xff");
+        UARTHMI_Cross_Page_Set_Number(paper_num, cap_paper[paper_num], "page1");
       }
     }
     else
@@ -202,6 +207,7 @@ int main(void)
         {
           UARTHMI_Visibility_Change(2, false);
           UARTHMI_Send_Number(1, Get_Paper_Number());
+          UARTHMI_Cross_Page_Set_Number(0, TIM_final, "page1");
           BEEP;
           HAL_Delay(500);
           NOBB;
